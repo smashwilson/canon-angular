@@ -5,17 +5,27 @@ module.exports = function(grunt) {
       options: {
         jshintrc: '.jshintrc'
       },
+      package: {
+        src: 'package.json'
+      },
       gruntfile: {
         src: 'Gruntfile.js'
       },
       lib: {
-        src: ['app/**/*.js']
+        src: ['directives/**/*.js']
       },
       test: {
         src: ['test/**/*.js']
       }
     },
     watch: {
+      package: {
+        files: '<%= jshint.package.src %>',
+        tasks: ['jshint:package'],
+        options: {
+          livereload: true
+        }
+      },
       gruntfile: {
         files: '<%= jshint.gruntfile.src %>',
         tasks: ['jshint:gruntfile'],
