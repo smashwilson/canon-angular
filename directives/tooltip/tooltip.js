@@ -49,7 +49,7 @@ angular.module('ui.canon.tooltip')
         };
 
         hideTooltip = function() {
-          $(element).attr('title', title)
+          $(element).attr('title', title);
           tooltip.remove();
         };
 
