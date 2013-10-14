@@ -36,7 +36,6 @@ module.exports = function(grunt) {
 
             return [
               livereload(),
-              connect.static('templates'),
               connect.static('examples'),
               connect.static('dist'),
               connect.directory('examples')
