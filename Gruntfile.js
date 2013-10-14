@@ -38,6 +38,7 @@ module.exports = function(grunt) {
               livereload(),
               connect.static('templates'),
               connect.static('examples'),
+              connect.static('dist'),
               connect.directory('examples')
             ];
           }
@@ -75,8 +76,8 @@ module.exports = function(grunt) {
         }
       },
       lib: {
-        files: '<%= jshint.lib.src %>',
-        tasks: ['jshint:lib'],
+        files: '<%= jshint.files %>',
+        tasks: ['jshint'],
         options: {
           livereload: true
         }
