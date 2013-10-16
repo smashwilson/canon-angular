@@ -1,5 +1,5 @@
 module.exports = function(grunt) {
- 
+
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-karma');
@@ -17,9 +17,16 @@ module.exports = function(grunt) {
       }
     },
     karma: {
-      unit: {
-        configFile: 'karma.conf.js',
-        singleRun: true
+      options: {
+        configFile: 'karma.conf.js'
+      },
+      dev: {
+        singleRun: true,
+        browsers: ['Chrome']
+      },
+      travis: {
+        singleRun: true,
+        browsers: ['Firefox']
       }
     },
     watch: {
@@ -40,13 +47,17 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.registerTask('test', [
-    'karma'
-  ]);
+  grunt.registerTask('test', 'Run tests on singleRun karma server', function() {
+    if (process.env.TRAVIS) {
+      grunt.task.run('karma:travis');
+    } else {
+      grunt.task.run('karma:dev');
+    }
+  });
 
   grunt.registerTask('default', [
-    'jshint', 
+    'jshint',
     'test'
   ]);
- 
+
 };
