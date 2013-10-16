@@ -8,26 +8,21 @@ angular.module('ui.canon.tooltip')
       restrict: 'A',
       scope: true,
       link: function(scope, element, attrs, ctrl) {
-        // var tooltip;
-        // tooltip = new canon.Tooltip();
-        // tooltip.attach(element);
-
         var position,
-          tooltip,
-          content,
-          title;
+        tooltip,
+        content,
+        title,
+        showTooltip,
+        hideTooltip,
+        toggleTooltip;
 
-        var showTooltip,
-          hideTooltip,
-          toggleTooltip;
+        $(element).hover(function() {
+          showTooltip();
+        },function() {
+          hideTooltip();
+        });
 
-        // $(element).hover(function() {
-        //   showTooltip();
-        // },function() {
-        //   hideTooltip();
-        // });
-
-        $(element).on('click', toggleTooltip);
+        //$(element).on('click', toggleTooltip);
 
         showTooltip = function() {
           title = $(element).attr("title");
@@ -54,12 +49,9 @@ angular.module('ui.canon.tooltip')
         };
 
         toggleTooltip = function() {
-          console.log('click!');
           if(tooltip.hasClass('visible')){
-            console.log('ye!');
             return hideTooltip();
           } else {
-            console.log('ne!');
             return showTooltip();
           }
         };
