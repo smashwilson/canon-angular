@@ -112,6 +112,6 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('build', ['clean', 'ngmin:directives', 'concat', 'uglify']);
-  grunt.registerTask('default', ['jshint', 'build']);
+  grunt.registerTask('default', ['jshint', 'build', 'test']);
   grunt.registerTask('server', ['jshint', 'build', 'connect:server', 'open', 'watch']);
 };
