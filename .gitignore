@@ -6,3 +6,4 @@ npm-debug.log
 
 template/**/*.js
 dist
+vendor
