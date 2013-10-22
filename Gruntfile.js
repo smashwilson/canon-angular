@@ -12,13 +12,12 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    dist: 'dist',
+    dist: 'build',
     filename: 'canon-angular',
     jshint: {
       files: [
         'Gruntfile.js',
-        'directives/**/*.js',
-        'test/**/*.js'
+        'lib/directives/**/*.js'
       ],
       options: {
         jshintrc: '.jshintrc'
@@ -38,16 +37,16 @@ module.exports = function(grunt) {
       }
     },
     clean: {
-      all: ['dist']
+      all: ['build']
     },
     concat: {
       dist: {
-        // options: {
-        //   banner: '<%= meta.modules %>\n'
-        // },
-        cwd: "dist/",
-        src: ['directives/**/*.js', '!directives/**/*.spec.js'],
+        src: ['build/directives/**/*.js', '!build/directives/**/*.spec.js'],
         dest: '<%= dist %>/<%= filename %>-<%= pkg.version %>.js'
+      },
+      release: {
+        src: ['build/directives/**/*.js', '!build/directives/**/*.spec.js'],
+        dest: 'lib/<%= filename %>.js'
       }
     },
     connect: {
@@ -60,7 +59,7 @@ module.exports = function(grunt) {
             return [
               livereload(),
               connect.static('examples'),
-              connect.static('dist'),
+              connect.static('build'),
               connect.directory('examples')
             ];
           }
@@ -75,15 +74,19 @@ module.exports = function(grunt) {
     ngmin: {
       directives: {
         expand: true,
-        cwd: 'directives/',
+        cwd: 'lib/directives/',
         src: ['**/*.js', '!**/*.spec.js'],
-        dest: 'dist/directives'
+        dest: 'build/directives'
       }
     },
     uglify: {
       dist:{
         src: '<%= dist %>/<%= filename %>-<%= pkg.version %>.js',
         dest:'<%= dist %>/<%= filename %>-<%= pkg.version %>.min.js'
+      },
+      release:{
+        src: 'lib/<%= filename %>.js',
+        dest:'lib/<%= filename %>.min.js'
       }
     },
     watch: {
@@ -111,7 +114,8 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.registerTask('build', ['clean', 'ngmin:directives', 'concat', 'uglify']);
+  grunt.registerTask('build', ['clean', 'ngmin:directives', 'concat', 'uglify:dist']);
   grunt.registerTask('default', ['jshint', 'build', 'test']);
   grunt.registerTask('server', ['jshint', 'build', 'connect:server', 'open', 'watch']);
+  grunt.registerTask('release', ['clean', 'ngmin:directives', 'concat', 'uglify:release']);
 };

@@ -7,12 +7,8 @@ basePath = '';
 files = [
   JASMINE,
   JASMINE_ADAPTER,
-  // 'examples/test-lib/jquery-1.8.2.min.js',
-  'vendor/angular/angular.js',
-  // 'examples/test-lib/angular-mocks.js',
-  // 'examples/test-lib/helpers.js',
-  // 'templates/**/*.js',
-  'directives/**/*.js'
+  'bower_components/angular/angular.js',
+  'lib/directives/**/*.js'
 ];
 
 // list of files to exclude
