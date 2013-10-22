@@ -1,6 +1,14 @@
 {
   "name": "canon-angular",
   "version": "0.1.0",
+  "main": [
+    "lib/canon-angular.js",
+    "lib/canon-angular.min.js"
+  ],
+  "ignore": [
+    "**/.*",
+    "**/*"
+  ],
   "dependencies": {
     "angular": "1.2.0-rc.3",
     "jquery": "1.10.2"

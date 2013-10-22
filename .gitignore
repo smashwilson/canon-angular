@@ -6,4 +6,4 @@ npm-debug.log
 
 template/**/*.js
 build
-components
+bower_components
