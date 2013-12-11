@@ -60,6 +60,7 @@ module.exports = function(grunt) {
               livereload(),
               connect.static('examples'),
               connect.static('build'),
+              connect.static('bower_components'),
               connect.directory('examples')
             ];
           }
