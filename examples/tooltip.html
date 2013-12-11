@@ -7,11 +7,11 @@
   <title>Cloud Servers | Canon Demo</title>
   <meta name="viewport" content="width=device-width">
 
-  <link rel="stylesheet" type="text/css" href="http://ci.canon.rackspace.com/view/Canon/job/canon-functional/lastSuccessfulBuild/artifact/dist/canon.min.css">
+  <link rel="stylesheet" type="text/css" href="/canon/dist/canon.min.css">
 
-  <script type="application/javascript" src="https://code.jquery.com/jquery-1.10.0.min.js"></script>
-  <script type="application/javascript" src="https://eafdbc63c97ce6bec9ef-b0a668e5876bef6fe25684caf71db405.ssl.cf1.rackcdn.com/v1-latest/canon.min.js"></script>
-  <script type="application/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.1/angular.min.js"></script>
+  <script type="application/javascript" src="/jquery/jquery.min.js"></script>
+  <script type="application/javascript" src="/canon/dist/canon.min.js"></script>
+  <script type="application/javascript" src="/angular/angular.min.js"></script>
   <script type="application/javascript" src="../directives/tooltip/tooltip.js"></script>
   <script>
     angular.module('app', ['ui.canon.tooltip']);
@@ -167,7 +167,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    
+
                     <tr>
                       <td class="rs-table-status rs-table-status-ok"></td>
                       <td class="rs-table-checkbox"><input type="checkbox" /></td>
@@ -187,7 +187,7 @@
                       <td class="rs-table-link"><a href="/details.html">My Cloud Server 1</a></td>
                       <td class="rs-table-text">111.222.111 {{message}} <span class="rs-icon-help tip" tooltip title="&lt;h3&gt;A really good idea&lt;/h3&gt; Some really good thought was put into this. Try and follow the guidelines."></span></td>
                     </tr>
-                    
+
                   </tbody>
                 </table>
               </div>
