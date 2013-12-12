@@ -14,15 +14,17 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
     dist: 'build',
     filename: 'canon-angular',
+
     jshint: {
       files: [
         'Gruntfile.js',
-        'lib/directives/**/*.js'
+        'lib/scripts/**/*.js'
       ],
       options: {
         jshintrc: '.jshintrc'
       }
     },
+
     karma: {
       options: {
         configFile: 'karma.conf.js'
@@ -36,19 +38,22 @@ module.exports = function(grunt) {
         browsers: ['Firefox']
       }
     },
+
     clean: {
       all: ['build']
     },
+
     concat: {
       dist: {
-        src: ['build/directives/**/*.js', '!build/directives/**/*.spec.js'],
+        src: ['build/scripts/**/*.js'],
         dest: '<%= dist %>/<%= filename %>-<%= pkg.version %>.js'
       },
       release: {
-        src: ['build/directives/**/*.js', '!build/directives/**/*.spec.js'],
-        dest: 'lib/<%= filename %>.js'
+        src: ['build/scripts/**/*.js'],
+        dest: '<%= dist %>/<%= filename %>.js'
       }
     },
+
     connect: {
       server: {
         options: {
@@ -67,29 +72,33 @@ module.exports = function(grunt) {
         }
       }
     },
+
     open: {
       server: {
         url: 'http://localhost:<%= connect.server.options.port %>'
       }
     },
+
     ngmin: {
-      directives: {
+      dist: {
         expand: true,
-        cwd: 'lib/directives/',
-        src: ['**/*.js', '!**/*.spec.js'],
-        dest: 'build/directives'
+        cwd: 'lib/scripts/',
+        src: ['**/*.js'],
+        dest: '<%= dist %>/scripts'
       }
     },
+
     uglify: {
       dist:{
         src: '<%= dist %>/<%= filename %>-<%= pkg.version %>.js',
         dest:'<%= dist %>/<%= filename %>-<%= pkg.version %>.min.js'
       },
       release:{
-        src: 'lib/<%= filename %>.js',
-        dest:'lib/<%= filename %>.min.js'
+        src: '<%= dist %>/<%= filename %>.js',
+        dest:'<%= dist %>/<%= filename %>.min.js'
       }
     },
+
     watch: {
       html: {
         files: ['examples/**/*.html', 'templates/**/*.html'],
@@ -115,8 +124,8 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.registerTask('build', ['clean', 'ngmin:directives', 'concat', 'uglify:dist']);
+  grunt.registerTask('build', ['clean', 'ngmin:dist', 'concat:dist', 'uglify:dist']);
   grunt.registerTask('default', ['jshint', 'build', 'test']);
   grunt.registerTask('server', ['jshint', 'build', 'connect:server', 'open', 'watch']);
-  grunt.registerTask('release', ['clean', 'ngmin:directives', 'concat', 'uglify:release']);
+  grunt.registerTask('release', ['clean', 'ngmin:dist', 'concat:release', 'uglify:release']);
 };
