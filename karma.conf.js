@@ -8,7 +8,8 @@ files = [
   JASMINE,
   JASMINE_ADAPTER,
   'bower_components/angular/angular.js',
-  'lib/directives/**/*.js'
+  'lib/scripts/**/*.js',
+  'test/spec/**/*.js'
 ];
 
 // list of files to exclude
