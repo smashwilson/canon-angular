@@ -4,6 +4,7 @@
 node_modules
 npm-debug.log
 
-template/**/*.js
 build
+.tmp
 bower_components
+lib/scripts/views.js
