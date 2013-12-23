@@ -12,6 +12,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-open');
   grunt.loadNpmTasks('grunt-html2js');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-bumpup');
+  grunt.loadNpmTasks('grunt-tagrelease');
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -151,6 +153,15 @@ module.exports = function(grunt) {
       }
     },
 
+    bumpup: 'package.json',
+
+    /*
+      Commit the changes and tag the last commit with
+      a version from provided JSON file.
+      If there is nothing to commit, the task will tag the current last commit.
+     */
+    tagrelease: 'package.json',
+
     watch: {
       html: {
         files: ['examples/**/*.html', 'lib/views/**/*.html'],
@@ -209,11 +220,12 @@ module.exports = function(grunt) {
     'copy:dev',
     'connect:server',
     'open',
-    'watch']);
-  grunt.registerTask('release', [
-    'clean',
-    'ngmin:dist',
-    'concat:dist',
-    'uglify:dist'
-    ]);
+    'watch'
+  ]);
+  grunt.registerTask('release', function(type) {
+    type = type ? type : 'patch';
+    grunt.task.run('jshint');
+    grunt.task.run('build');
+    grunt.task.run('bumpup:' + type);
+  });
 };
