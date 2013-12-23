@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <title>Canon Angular Demo</title>
+  <meta name="viewport" content="width=device-width">
+
+  <link rel="stylesheet" type="text/css" href="/canon/dist/canon.min.css">
+
+  <script type="application/javascript" src="/canon/dist/canon.min.js"></script>
+  <script type="application/javascript" src="/angular/angular.min.js"></script>
+  <script type="application/javascript" src="/canon-angular.js"></script>
+  <script>
+    var items = [{
+        label: 'foo',
+        url: 'https://mycloud.rackspace.com/servers'
+      },
+      {
+        label: 'moo',
+        url: 'https://mycloud.rackspace.com/servers'
+      },
+    ];
+
+    angular.module('app', ['ui.canon.tooltip', 'ui.canon.button', 'ui.canon.list']);
+
+    angular.module('app').controller('MainCtrl', ['$scope', '$timeout', function($scope, $timeout){
+      $scope.items = items;
+
+      $scope.btnState = 'active';
+
+      $scope.onClickHandler = function() {
+        $timeout(function() {
+          $scope.btnState = 'active';
+        }, 2000);
+      };
+    }]);
+  </script>
+
+</head>
+<body class="rs-fixed" ng-app="app" ng-controller="MainCtrl">
+  <div class="rs-nav-utility rs-fixed-top"></div>
+
+  <div class="rs-nav-primary rs-fixed-top">
+    <div class="rs-container">
+      <div class="rs-nav-brand">
+        <a href="index.html"></a>
+      </div>
+      <ul class="rs-nav">
+        <li class="rs-dropdown rs-primary-dropdown active">
+          <a class="rs-dropdown-toggle" href="javascript:void(0);">Canon Angular Demo</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="rs-nav-secondary rs-fixed-top">
+    <div class="rs-container">
+      <ul class="rs-nav">
+        <li class="active"><a href="index.html">Tooltip</a></li>
+        <li><a href="">Button</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="rs-body">
+    <div class="rs-container">
+      <div class="rs-main">
+        <div class="rs-content rs-panel">
+
+          <div class="rs-inner">
+            <h2 class="rs-page-title">Tooltip Directive</h2>
+            <div>
+              Hover over the icon<span class="rs-icon-help tip" rs-tooltip title="&lt;h3&gt;A really good idea&lt;/h3&gt; Some really good thought was put into this. Try and follow the guidelines."></span>
+            </div>
+          </div>
+
+          <div class="rs-inner">
+            <h2 class="rs-page-title">Button Directive</h2>
+            <rs-button btn-text="Default" state="btnState" btn-click-handler="onClickHandler()"></rs-button>
+            <span>Button is disabled on click and then enabled after a timeout to 2000ms.
+          </div>
+
+          <div class="rs-inner">
+            <h2 class="rs-page-title">List Directive</h2>
+            <div>
+              <rs-list list-items=items></rs-list>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="rs-push"></div>
+
+  <div class="rs-footer">
+    <div class="rs-container">
+      <ul class="rs-links">
+        <li>&copy; Rackspace, US</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

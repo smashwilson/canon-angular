@@ -8,9 +8,17 @@ files = [
   JASMINE,
   JASMINE_ADAPTER,
   'bower_components/angular/angular.js',
+  'bower_components/angular-mocks/angular-mocks.js',
+  'bower_components/jquery/jquery.js',
+  'lib/scripts/*.js',
   'lib/scripts/**/*.js',
-  'test/spec/**/*.js'
+  'lib/views/**/*.html',
+  'test/spec/**/*.js',
 ];
+
+preprocessors = {
+  'lib/views/**/*.html': 'html2js'
+};
 
 // list of files to exclude
 exclude = [];

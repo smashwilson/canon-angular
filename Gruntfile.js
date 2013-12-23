@@ -1,3 +1,4 @@
+'use strict';
 module.exports = function(grunt) {
 
   grunt.loadNpmTasks('grunt-contrib-clean');
@@ -9,64 +10,31 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-ngmin');
   grunt.loadNpmTasks('grunt-open');
+  grunt.loadNpmTasks('grunt-html2js');
+  grunt.loadNpmTasks('grunt-contrib-copy');
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+    base: 'lib',
     dist: 'build',
+    tmp: '.tmp',
     filename: 'canon-angular',
-
-    jshint: {
-      files: [
-        'Gruntfile.js',
-        'lib/scripts/**/*.js'
-      ],
-      options: {
-        jshintrc: '.jshintrc'
-      }
-    },
-
-    karma: {
-      options: {
-        configFile: 'karma.conf.js'
-      },
-      dev: {
-        singleRun: true,
-        browsers: ['Chrome']
-      },
-      travis: {
-        singleRun: true,
-        browsers: ['Firefox']
-      }
-    },
-
-    clean: {
-      all: ['build']
-    },
-
-    concat: {
-      dist: {
-        src: ['build/scripts/**/*.js'],
-        dest: '<%= dist %>/<%= filename %>-<%= pkg.version %>.js'
-      },
-      release: {
-        src: ['build/scripts/**/*.js'],
-        dest: '<%= dist %>/<%= filename %>.js'
-      }
-    },
 
     connect: {
       server: {
         options: {
           port: 9000,
-          middleware: function (connect) {
+          base: 'examples',
+          middleware: function (connect, options) {
             var livereload = require('connect-livereload');
-
             return [
               livereload(),
-              connect.static('examples'),
-              connect.static('build'),
               connect.static('bower_components'),
-              connect.directory('examples')
+              connect.static('build'),
+              // Serve static files.
+              connect.static(options.base),
+              // Make empty directories browsable.
+              connect.directory(options.base)
             ];
           }
         }
@@ -79,39 +47,131 @@ module.exports = function(grunt) {
       }
     },
 
+    clean: {
+      all: ['build'],
+      views: {
+        files: [{
+          dot: true,
+          src: [
+            '<%= base %>/scripts/views.js'
+          ]
+        }]
+      }
+    },
+
+    jshint: {
+      files: [
+        'Gruntfile.js',
+        '<%= base %>/scripts/**/*.js',
+        '!<%= base %>/scripts/views.js'
+      ],
+      options: {
+        jshintrc: '.jshintrc'
+      }
+    },
+
+
+    html2js: {
+      options: {
+        base: './lib',
+        rename: function(moduleName) {
+          return '/' + moduleName;
+        },
+        htmlmin: {
+          collapseWhitespace: true,
+          removeAttributeQuotes: true,
+          removeComments: true,
+          removeEmptyAttributes: true,
+          removeRedundantAttributes: true,
+          removeScriptTypeAttributes: true,
+          removeStyleLinkTypeAttributes: true
+        }
+      },
+      main: {
+        src: ['<%= base %>/views/**/*.html'],
+        dest: '<%= base %>/scripts/views.js'
+      }
+    },
+
     ngmin: {
       dist: {
         expand: true,
         cwd: 'lib/scripts/',
         src: ['**/*.js'],
-        dest: '<%= dist %>/scripts'
+        dest: '<%= tmp %>/scripts'
+      }
+    },
+
+    concat: {
+      dist: {
+        src: ['<%= tmp %>/scripts/**/*.js'],
+        dest: '<%= dist %>/<%= filename %>.js'
+      },
+      release: {
+        src: ['build/scripts/**/*.js'],
+        dest: '<%= dist %>/<%= filename %>-<%= pkg.version %>.js'
       }
     },
 
     uglify: {
-      dist:{
-        src: '<%= dist %>/<%= filename %>-<%= pkg.version %>.js',
-        dest:'<%= dist %>/<%= filename %>-<%= pkg.version %>.min.js'
-      },
-      release:{
+      dist: {
         src: '<%= dist %>/<%= filename %>.js',
         dest:'<%= dist %>/<%= filename %>.min.js'
+      },
+      release:{
+        src: '<%= dist %>/<%= filename %>-<%= pkg.version %>.js',
+        dest:'<%= dist %>/<%= filename %>-<%= pkg.version %>.min.js'
+      }
+    },
+
+    copy: {
+      dev: {
+        cwd: 'lib/views/',
+        expand: true,
+        src: ['**/*.html'],
+        dest: '<%= dist %>/views'
+      }
+    },
+
+    karma: {
+      options: {
+        configFile: 'karma.conf.js'
+      },
+      unit: {
+        singleRun: true
+      },
+      dev: {
+        browsers: ['Chrome'],
+        singleRun: false,
+        autoWatch: true
+      },
+      travis: {
+        singleRun: true,
+        browsers: ['Firefox']
       }
     },
 
     watch: {
       html: {
-        files: ['examples/**/*.html', 'templates/**/*.html'],
+        files: ['examples/**/*.html', 'lib/views/**/*.html'],
+        options: {
+          livereload: true
+        },
+        tasks: ['cache-views', 'copy:dev']
+      },
+      lib: {
+        files: '<%= jshint.files %>',
+        tasks: ['jshint', 'build', 'copy:dev'],
         options: {
           livereload: true
         }
       },
-      lib: {
-        files: '<%= jshint.files %>',
-        tasks: ['jshint', 'build'],
+      views: {
+        files: ['<%= base %>/views/{,*/}*.html'],
         options: {
           livereload: true
-        }
+        },
+        tasks: ['cache-views', 'copy:dev']
       }
     }
   });
@@ -120,12 +180,40 @@ module.exports = function(grunt) {
     if (process.env.TRAVIS) {
       grunt.task.run('karma:travis');
     } else {
-      grunt.task.run('karma:dev');
+      grunt.task.run('karma:unit');
     }
   });
+  grunt.registerTask('testwatch', [
+    'karma:dev'
+  ]);
 
-  grunt.registerTask('build', ['clean', 'ngmin:dist', 'concat:dist', 'uglify:dist']);
-  grunt.registerTask('default', ['jshint', 'build', 'test']);
-  grunt.registerTask('server', ['jshint', 'build', 'connect:server', 'open', 'watch']);
-  grunt.registerTask('release', ['clean', 'ngmin:dist', 'concat:release', 'uglify:release']);
+  grunt.registerTask('cache-views', [
+    'clean:views',
+    'html2js:main'
+  ]);
+  grunt.registerTask('build', [
+    'clean',
+    'cache-views',
+    'ngmin:dist',
+    'concat:dist',
+    'uglify:dist'
+  ]);
+  grunt.registerTask('default', [
+    'jshint',
+    'build',
+    'test'
+  ]);
+  grunt.registerTask('server', [
+    'jshint',
+    'build',
+    'copy:dev',
+    'connect:server',
+    'open',
+    'watch']);
+  grunt.registerTask('release', [
+    'clean',
+    'ngmin:dist',
+    'concat:dist',
+    'uglify:dist'
+    ]);
 };
