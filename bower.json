@@ -2,8 +2,8 @@
   "name": "canon-angular",
   "version": "0.1.0",
   "main": [
-    "lib/canon-angular.js",
-    "lib/canon-angular.min.js"
+    "build/canon-angular.js",
+    "build/canon-angular.min.js"
   ],
   "ignore": [
     "**/.*",
