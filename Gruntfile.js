@@ -226,6 +226,7 @@ module.exports = function(grunt) {
     type = type ? type : 'patch';
     grunt.task.run('jshint');
     grunt.task.run('build');
+    grunt.task.run('test');
     grunt.task.run('bumpup:' + type);
   });
 };
